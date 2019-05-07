@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/perezd
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://derek.perez.earth
+  * I am perezd (https://keybase.io/perezd) on keybase.
+  * I have a public key ASBchrDVsIVqGaACHsirPHJQOIbV0mA1jn7tSwDFvhJegwo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "01205c86b0d5b0856a19a0021ec8ab3c72503886d5d260358e7eed4b00c5be125e830a",
+      "host": "keybase.io",
+      "kid": "01205c86b0d5b0856a19a0021ec8ab3c72503886d5d260358e7eed4b00c5be125e830a",
+      "uid": "7f2ced74ced3254879040920d9c6dd00",
+      "username": "perezd"
+    },
+    "merkle_root": {
+      "ctime": 1557195301,
+      "hash": "98c2dd1baa89e70617361048bf96264cbb51ced0a294de85bf5b42fd161687f46a27a0d7a17759a66017908c7f0abaa80a337cfc1d0ad376d5deee2914261baa",
+      "hash_meta": "32b510f6a4567508da6f6c74d9dfa664b752239a33a3738b0740986ca3bf0484",
+      "seqno": 5319232
+    },
+    "service": {
+      "entropy": "sGsHDHgxL+z+UNNdHQcPjHta",
+      "hostname": "derek.perez.earth",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "3.2.2"
+  },
+  "ctime": 1557195329,
+  "expire_in": 504576000,
+  "prev": "ec8871349f80e44d8d976d857a9bd35e9bcb5f525774935cc0633ce8894ce363",
+  "seqno": 43,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgXIaw1bCFahmgAh7IqzxyUDiG1dJgNY5+7UsAxb4SXoMKp3BheWxvYWTESpcCK8Qg7IhxNJ+A5E2Nl22FepvTXpvLX1JXdJNcwGM86IlM42PEIA8SJn2FrfaSy5JWlT0Rd34xlCZsKFJz3xP6EBy0T8/bAgHCo3NpZ8RA5tVf+OsVSFU661fJjx7xFvioCPy3mx8tc+zoFsOvUrEqr7rev5eH//SE+j5k72Oiu5hDMw7S3Z627k8QcVYhAKhzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIBmvPtRBzhu5bvGSHBOiTd/WN+W0+bJDm/eQUD40me0Lo3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/perezd
+
+==================================================================
