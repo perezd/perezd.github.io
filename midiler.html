@@ -76,9 +76,7 @@
           );
         });
         $("#midiIn").change(() => {
-          if (midiIn) {
-            midiIn.onmidimessage = undefined;
-          }
+          if (midiIn) midiIn.onmidimessage = undefined;
           // If we get a midi event, let's send it over the wire.
           midiIn = midiAccess.inputs.get($("#midiIn").val());
           midiIn.onmidimessage = (message) => {
