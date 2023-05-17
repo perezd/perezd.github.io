@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {};
+    </script>
+  </head>
+  <body>
+    <div class="p-4 border-2 border-black hidden">
+      <label for="midiIn">MIDI In</label>
+      <select id="midiIn"></select>
+    </div>
+    <div class="p-4 border-2 border-black hidden">
+      <label for="midiOut">MIDI Out</label>
+      <select id="midiOut"></select>
+    </div>
+    <div id="link" class="hidden">
+      <a href="" target="_blank"></a>
+    </div>
+  </body>
+  <script>
+    $(document).ready(() => {
+      navigator.requestMIDIAccess().then((access) => {
+        var midiAccess;
+        var midiIn;
+        var midiOut;
+
+        var peer = new Peer();
+        var conn;
+
+        peer.on("connection", (c) => {
+          console.log("connection inbound!");
+          conn = c;
+          // If we get data from the wire, forward it to midi out.
+          conn.on("data", (data) => {
+            if (midiOut) midiOut.send(new Uint8Array(data));
+          });
+        });
+
+        peer.on("disconnected", () => {
+          console.log("disconnected");
+          conn = undefined;
+        });
+
+        peer.on("open", (peerId) => {
+          var urlParams = new URLSearchParams(window.location.search);
+          // If not a peer, we're a host.
+          if (urlParams.get("peer") == null) {
+            var url = window.location.origin + "?peer=" + peerId;
+            $("#link a").attr("href", url).text(url);
+            $("#link").removeClass("hidden");
+            $("#midiOut").parent().removeClass("hidden");
+          } else {
+            // If we're not a host, let's connect as a peer.
+            console.log("connecting...");
+            conn = peer.connect(urlParams.get("peer"), { reliable: true });
+            conn.on("open", () => {
+              console.log("connected.");
+            });
+            $("#midiIn").parent().removeClass("hidden");
+          }
+        });
+
+        peer.on("error", function (err) {
+          console.log(err);
+          alert("" + err);
+        });
+
+        midiAccess = access;
+        midiAccess.inputs.forEach((input) => {
+          $("#midiIn").append(
+            $("<option>", {
+              value: input.id,
+              text: input.name,
+            })
+          );
+        });
+        $("#midiIn").change(() => {
+          if (midiIn) {
+            midiIn.onmidimessage = undefined;
+          }
+          // If we get a midi event, let's send it over the wire.
+          midiIn = midiAccess.inputs.get($("#midiIn").val());
+          midiIn.onmidimessage = (message) => {
+            if (conn) conn.send(message.data);
+          };
+        });
+
+        midiAccess.outputs.forEach((output) => {
+          $("#midiOut").append(
+            $("<option>", {
+              value: output.id,
+              text: output.name,
+            })
+          );
+        });
+
+        $("#midiOut").change(() => {
+          midiOut = midiAccess.outputs.get($("#midiOut").val());
+        });
+      });
+    });
+  </script>
+</html>
