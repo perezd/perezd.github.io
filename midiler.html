@@ -51,7 +51,7 @@
           var urlParams = new URLSearchParams(window.location.search);
           // If not a peer, we're a host.
           if (urlParams.get("peer") == null) {
-            var url = window.location.origin + "?peer=" + peerId;
+            var url = window.location.href + "?peer=" + peerId;
             $("#link a").attr("href", url).text(url);
             $("#link").removeClass("hidden");
             $("#midiOut").parent().removeClass("hidden");
