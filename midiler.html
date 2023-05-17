@@ -6,9 +6,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {};
-    </script>
   </head>
   <body>
     <div class="p-4 border-2 border-black hidden">
@@ -19,17 +16,16 @@
       <label for="midiOut">MIDI Out</label>
       <select id="midiOut"></select>
     </div>
-    <div id="link" class="hidden">
+    <div id="link" class="hidden p-4">
       <a href="" target="_blank"></a>
     </div>
   </body>
   <script>
     $(document).ready(() => {
-      navigator.requestMIDIAccess().then((access) => {
-        var midiAccess;
+      navigator.requestMIDIAccess().then((midiAccess) => {
         var midiIn;
         var midiOut;
-
+        
         var peer = new Peer();
         var conn;
 
@@ -71,7 +67,6 @@
           alert("" + err);
         });
 
-        midiAccess = access;
         midiAccess.inputs.forEach((input) => {
           $("#midiIn").append(
             $("<option>", {
@@ -99,7 +94,6 @@
             })
           );
         });
-
         $("#midiOut").change(() => {
           midiOut = midiAccess.outputs.get($("#midiOut").val());
         });
