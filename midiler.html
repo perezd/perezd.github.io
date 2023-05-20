@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/webmidi@latest/dist/iife/webmidi.iife.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body>
@@ -20,24 +21,21 @@
       <a href="" target="_blank"></a>
     </div>
   </body>
-  <script>
+  <script type="module">
     $(document).ready(() => {
-      navigator.requestMIDIAccess().then((midiAccess) => {
-        var midiIn;
-        var midiOut;
+      WebMidi.enable().then(() => {
+        let midiIn;
+        let midiOut;
 
-        var peer = new Peer();
-        var conn;
+        const peer = new Peer();
+        let conn;
 
         peer.on("connection", (c) => {
           console.log("connection inbound!");
           conn = c;
           // If we get data from the wire, forward it to midi out.
-          conn.on("data", (data) => {
-            if (midiOut) {
-              console.log(data);
-              midiOut.send(new Uint8Array(data));
-            }
+          conn.on("data", (rawNoteData) => {
+            if (midiOut) midiOut.send(new Uint8Array(rawNoteData));
           });
         });
 
@@ -70,7 +68,8 @@
           alert("" + err);
         });
 
-        midiAccess.inputs.forEach((input) => {
+        // Render the midi inputs.
+        WebMidi.inputs.forEach((input) => {
           $("#midiIn").append(
             $("<option>", {
               value: input.id,
@@ -78,19 +77,20 @@
             })
           );
         });
+
+        // If we get a midi event, let's send it over the wire.
+        const midiNoteEvent = (noteEvent) => {
+          console.log(noteEvent);
+          if (conn) conn.send(noteEvent.data);
+        };
+
         $("#midiIn").change(() => {
-          if (midiIn) midiIn.onmidimessage = undefined;
-          // If we get a midi event, let's send it over the wire.
-          midiIn = midiAccess.inputs.get($("#midiIn").val());
-          midiIn.onmidimessage = (message) => {
-            if (conn) {
-              console.log("SEND", message.data);
-              conn.send(message.data);
-            }
-          };
+          if (midiIn) midiIn.removeListener("midimessage");
+          midiIn = WebMidi.getInputById($("#midiIn").val());
+          midiIn.addListener("midimessage", midiNoteEvent);
         });
 
-        midiAccess.outputs.forEach((output) => {
+        WebMidi.outputs.forEach((output) => {
           $("#midiOut").append(
             $("<option>", {
               value: output.id,
@@ -99,7 +99,7 @@
           );
         });
         $("#midiOut").change(() => {
-          midiOut = midiAccess.outputs.get($("#midiOut").val());
+          midiOut = WebMidi.getOutputById($("#midiOut").val());
         });
       });
     });
