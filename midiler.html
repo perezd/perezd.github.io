@@ -25,7 +25,7 @@
       navigator.requestMIDIAccess().then((midiAccess) => {
         var midiIn;
         var midiOut;
-        
+
         var peer = new Peer();
         var conn;
 
@@ -34,7 +34,10 @@
           conn = c;
           // If we get data from the wire, forward it to midi out.
           conn.on("data", (data) => {
-            if (midiOut) midiOut.send(new Uint8Array(data));
+            if (midiOut) {
+              console.log(data);
+              midiOut.send(new Uint8Array(data));
+            }
           });
         });
 
@@ -80,7 +83,10 @@
           // If we get a midi event, let's send it over the wire.
           midiIn = midiAccess.inputs.get($("#midiIn").val());
           midiIn.onmidimessage = (message) => {
-            if (conn) conn.send(message.data);
+            if (conn) {
+              console.log("SEND", message.data);
+              conn.send(message.data);
+            }
           };
         });
 
